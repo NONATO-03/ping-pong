@@ -1,5 +1,2 @@
-##PING-PONG
-Ping-pong é um famoso jogo retrô, ao lado de outras obras como: "jogo da minhoca","tetris","pacman", e.t.c. É um jogo incrivelmente simples de fazer, um jogo funcional de ping-pong deve ocupar por volta de 200 linhas de código.
-
-##Contexto
-Começei fazendo como um exercício da biblioteca "turtle" de um curso online de Python. Contudo, tive várias ideias e decidi implementar ao longo do caminho. Ao longo do tempo, tive que migrar o código para outra biblioteca, pygame. Essa biblioteca é centrada em criar jogos em python.
+# PING-PONG 
+Ping-pong é um famoso jogo retrô, ao lado de outras obras como: "jogo da minhoca","tetris","pacman", e.t.c. É um jogo incrivelmente simples de fazer, um jogo funcional de ping-pong deve ocupar por volta de 200 linhas de código. Começei o projeto fazendo como um exercício da biblioteca "turtle" de um curso online de Python. Contudo, tive várias ideias e decidi implementar ao longo do caminho. Ao longo do tempo, tive que migrar o código para outra biblioteca, pygame. Essa biblioteca é centrada em criar jogos em python.
