@@ -1,5 +1,6 @@
 import pygame
 import random
+import webbrowser
 import time
 from visual import (
     draw_menu_principal,
@@ -9,19 +10,20 @@ from visual import (
     draw_map_select_menu
 )
 
+# CONTROLA TODAS AS ABAS DO MENU DO JOGO
+
 class BolaMenu:
     def __init__(self, x, y, som, radius=14, color=(255,255,255)):
         self.x = x
         self.y = y
         self.radius = radius
         self.color = color
-        self.x_move = random.choice([-1,1]) * random.uniform(3,5) # velocidade
+        self.x_move = random.choice([-1,1]) * random.uniform(3,5)
         self.y_move = random.choice([-1,1]) * random.uniform(3,5)
         self.rastro = []
         self.som = som
 
     def move(self, WIDTH, HEIGHT):
-        # Rastro igual ao do jogo
         self.rastro.append({'x': self.x, 'y': self.y, 'radius': self.radius, 'alpha': 180, 'color': self.color})
         for r in self.rastro:
             r['radius'] = max(2, r['radius'] * 0.85)
@@ -37,21 +39,17 @@ class BolaMenu:
             self.y_move *= -1
             bateu = True
         if bateu:
-            # Som de parede com volume baixo
             try:
                 self.som.play_som_parede(volume=0.01)
             except TypeError:
-                # Se play_som_parede não aceita volume, use padrão
                 self.som.play_som_parede()
 
 def draw_bola_menu(screen, bola_menu):
-    # Rastro
     for r in bola_menu.rastro:
         surf = pygame.Surface((r['radius']*2, r['radius']*2), pygame.SRCALPHA)
         cor = r.get('color', (255,255,255))
         pygame.draw.circle(surf, cor + (int(r['alpha']),), (int(r['radius']), int(r['radius'])), int(r['radius']))
         screen.blit(surf, (r['x']-r['radius'], r['y']-r['radius']))
-    # Bola principal
     pygame.draw.circle(screen, bola_menu.color, (int(bola_menu.x), int(bola_menu.y)), bola_menu.radius)
 
 class MenuState:
@@ -91,9 +89,14 @@ class MenuState:
 
     def run_principal(self):
         screen = pygame.display.get_surface()
-        # Efeito secreto: letras quicando
         if self.letras_quicando:
-            draw_menu_principal(self.menu_selected_idx, mostrar_opcoes=self.menu_continuar, letras_bolas=self.letras_bolas, letras_voltando=self.letras_voltando)
+            letras_rects, _, exit_rect = draw_menu_principal(
+                self.menu_selected_idx,
+                mostrar_opcoes=self.menu_continuar,
+                letras_bolas=self.letras_bolas,
+                letras_voltando=self.letras_voltando
+            )
+            # ANIMAÇÃO DAS LETRAS
             if not self.letras_voltando:
                 for letra in self.letras_bolas:
                     letra['x'] += letra['vx']
@@ -124,17 +127,43 @@ class MenuState:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return "quit", 0
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_x:
+                    return "quit", 0
+                if event.type == pygame.MOUSEBUTTONDOWN and exit_rect.collidepoint(event.pos):
+                    return "quit", 0
             pygame.display.flip()
             pygame.time.Clock().tick(60)
             return "menu", 0
 
-        letras_rects = draw_menu_principal(self.menu_selected_idx, mostrar_opcoes=self.menu_continuar)
+        letras_rects, mouse_idx, exit_rect = draw_menu_principal(
+            self.menu_selected_idx,
+            mostrar_opcoes=self.menu_continuar
+        )
         self.bola_menu.move(self.WIDTH, self.HEIGHT)
         draw_bola_menu(screen, self.bola_menu)
+        mx, my = pygame.mouse.get_pos()
+        # Ativa menu de seleção ao passar mouse sobre opções
+        if not self.menu_continuar and mouse_idx is not None:
+            self.menu_continuar = True
+            self.menu_selected_idx = mouse_idx
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return "quit", 0
-            # Clique do mouse nas letras
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_x:
+                return "quit", 0
+            if event.type == pygame.MOUSEBUTTONDOWN and exit_rect.collidepoint(event.pos):
+                return "quit", 0
+            if self.menu_continuar and event.type == pygame.MOUSEBUTTONDOWN and mouse_idx is not None:
+                self.menu_selected_idx = mouse_idx
+                self.som.play_som_menu_selecao()
+                if mouse_idx == 0:
+                    return "modo", 0
+                elif mouse_idx == 1:
+                    return "ajuda", 0
+                elif mouse_idx == 2:
+                    return "creditos", 0
+            if self.menu_continuar and mouse_idx is not None:
+                self.menu_selected_idx = mouse_idx
             if event.type == pygame.MOUSEBUTTONDOWN and not self.letras_quicando and not self.menu_continuar:
                 mx, my = event.pos
                 for letra, rect in letras_rects:
@@ -165,7 +194,6 @@ class MenuState:
                         self.letras_voltando = False
                         break
                 return "menu", 0
-            # Efeito secreto por teclado
             if event.type == pygame.KEYDOWN:
                 if not self.letras_quicando and not self.menu_continuar:
                     letra = pygame.key.name(event.key).upper()
@@ -195,11 +223,10 @@ class MenuState:
                             })
                         self.letras_voltando = False
                         return "menu", 0
-                if not self.menu_continuar:
-                    if event.key == pygame.K_SPACE:
-                        self.som.play_som_menu_selecao()
-                        self.menu_continuar = True
-                else:
+                if not self.menu_continuar and event.key == pygame.K_SPACE:
+                    self.som.play_som_menu_selecao()
+                    self.menu_continuar = True
+                elif self.menu_continuar:
                     if event.key == pygame.K_x:
                         return "quit", 0
                     elif event.key == pygame.K_DOWN:
@@ -222,7 +249,7 @@ class MenuState:
 
     def run_ajuda(self):
         screen = pygame.display.get_surface()
-        draw_ajuda()
+        exit_rect = draw_ajuda()
         self.bola_menu.move(self.WIDTH, self.HEIGHT)
         draw_bola_menu(screen, self.bola_menu)
         for event in pygame.event.get():
@@ -232,13 +259,16 @@ class MenuState:
                 if event.key == pygame.K_z:
                     self.som.play_som_menu_selecao()
                     return "menu", 0
+            if event.type == pygame.MOUSEBUTTONDOWN and exit_rect.collidepoint(event.pos):
+                self.som.play_som_menu_selecao()
+                return "menu", 0
         pygame.display.flip()
         pygame.time.Clock().tick(60)
         return "ajuda", 0
 
     def run_creditos(self):
         screen = pygame.display.get_surface()
-        draw_creditos()
+        link_area, exit_rect = draw_creditos()
         self.bola_menu.move(self.WIDTH, self.HEIGHT)
         draw_bola_menu(screen, self.bola_menu)
         for event in pygame.event.get():
@@ -246,6 +276,12 @@ class MenuState:
                 return "quit", 0
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_z:
+                    self.som.play_som_menu_selecao()
+                    return "menu", 0
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if link_area.collidepoint(pygame.mouse.get_pos()):
+                    webbrowser.open("https://www.linkedin.com/in/vitor-n-9441932b1/")
+                if exit_rect.collidepoint(event.pos):
                     self.som.play_som_menu_selecao()
                     return "menu", 0
         pygame.display.flip()
@@ -254,12 +290,23 @@ class MenuState:
 
     def run_modo(self):
         screen = pygame.display.get_surface()
-        draw_modo_menu()
+        frames, mouse_idx, exit_rect = draw_modo_menu(self.menu_selected_idx)
         self.bola_menu.move(self.WIDTH, self.HEIGHT)
         draw_bola_menu(screen, self.bola_menu)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return "quit", None
+            if mouse_idx is not None:
+                self.menu_selected_idx = mouse_idx
+            if event.type == pygame.MOUSEBUTTONDOWN and mouse_idx is not None:
+                self.som.play_som_menu_selecao()
+                if mouse_idx == 0:
+                    return "map_select", "local"
+                if mouse_idx == 1:
+                    return "map_select", "bot"
+            if event.type == pygame.MOUSEBUTTONDOWN and exit_rect.collidepoint(event.pos):
+                self.som.play_som_menu_selecao()
+                return "menu", None
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
                     self.som.play_som_menu_selecao()
@@ -267,6 +314,18 @@ class MenuState:
                 if event.key == pygame.K_2:
                     self.som.play_som_menu_selecao()
                     return "map_select", "bot"
+                if event.key == pygame.K_DOWN:
+                    self.menu_selected_idx = (self.menu_selected_idx + 1) % 2
+                    self.som.play_som_menu_selecao()
+                if event.key == pygame.K_UP:
+                    self.menu_selected_idx = (self.menu_selected_idx - 1) % 2
+                    self.som.play_som_menu_selecao()
+                if event.key == pygame.K_RETURN:
+                    self.som.play_som_menu_selecao()
+                    if self.menu_selected_idx == 0:
+                        return "map_select", "local"
+                    if self.menu_selected_idx == 1:
+                        return "map_select", "bot"
                 if event.key == pygame.K_z:
                     self.som.play_som_menu_selecao()
                     return "menu", None
@@ -275,10 +334,15 @@ class MenuState:
         return "modo", None
 
     def run_map_select(self, selected_map_idx):
-        draw_map_select_menu(selected_map_idx)
+        frame_rects, mouse_idx = draw_map_select_menu(selected_map_idx)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return "quit", selected_map_idx
+            if mouse_idx is not None:
+                selected_map_idx = mouse_idx
+            if event.type == pygame.MOUSEBUTTONDOWN and mouse_idx is not None:
+                self.som.play_som_menu_selecao()
+                return "playing", selected_map_idx
             if event.type == pygame.KEYDOWN:
                 last_selected_map_idx = selected_map_idx
                 if event.key == pygame.K_LEFT and selected_map_idx % 3 > 0:
