@@ -2,9 +2,9 @@
     <a href="./README-pt.md">🇧🇷 Ler em Portugues-Brasil</a>
 </div>
 
-<div align="center">
-  <img src="./assets/images/ping-pong.gif" alt="Ping-Pong Logo" width="300"/>
-</div>
+<p align="center">
+  <img src="./assets/images/ping-pong.gif" alt="Ping-Pong Logo" style="max-width: 300px;">
+</p>
 
 <p align="center">
   The classic and addictive Ping-Pong experience, developed in Python.
