@@ -53,6 +53,16 @@ It features different arenas, power-ups, custom music, and sound effects.
   <em>Event feature in action.</em>
 </p>
 
+### Gameplay Video
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=IHfQ1vLuy4g" target="_blank">
+    <img src="https://img.youtube.com/vi/IHfQ1vLuy4g/0.jpg" alt="Gameplay Video" width="80%">
+  </a>
+  <br>
+  <em>Watch a full gameplay test on YouTube.</em>
+</p>
+
 
 ### Tech Stack
 
