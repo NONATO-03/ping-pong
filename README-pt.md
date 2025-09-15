@@ -3,12 +3,11 @@
 </div>
 
 <div align="center">
-  <img src="./assets/images/screenshots/mainmenu.png" alt="Ping-Pong Logo" width="300"/>
-  <h1>Ping-Pong</h1>
+  <img src="./assets/images/logo.png" alt="Ping-Pong Logo" width="300"/>
 </div>
 
 <p align="center">
-  Um jogo divertido e personalizável de Ping-Pong feito em Python.
+  A experiência clássica e viciante do Ping-Pong, desenvolvida em Python.
   <br />
   <a href="#caracteristicas"><strong>Explore as Funcionalidades »</strong></a>
   <br />
@@ -97,3 +96,4 @@ Este projeto foi desenvolvido com as seguintes tecnologias:
 Feito com ❤️ por **Vitor Nonato Nascimento**.
 
 - **GitHub:** [https://github.com/NONATO-03](https://github.com/NONATO-03)
+
