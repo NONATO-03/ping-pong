@@ -53,6 +53,16 @@ Possui diferentes arenas, power-ups, músicas e efeitos sonoros personalizados.
   <em>Evento acontecendo durante a partida.</em>
 </p>
 
+### Vídeo de Gameplay
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=IHfQ1vLuy4g" target="_blank">
+    <img src="https://img.youtube.com/vi/IHfQ1vLuy4g/0.jpg" alt="Vídeo de Gameplay" width="80%">
+  </a>
+  <br>
+  <em>Assista a um teste de gameplay completo no YouTube.</em>
+</p>
+
 ### Tecnologias Utilizadas
 
 Este projeto foi desenvolvido com as seguintes tecnologias:
@@ -96,4 +106,5 @@ Este projeto foi desenvolvido com as seguintes tecnologias:
 Feito com ❤️ por **Vitor Nonato Nascimento**.
 
 - **GitHub:** [https://github.com/NONATO-03](https://github.com/NONATO-03)
+
 
