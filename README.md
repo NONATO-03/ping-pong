@@ -3,8 +3,7 @@
 </div>
 
 <div align="center">
-  <img src="./assets/images/screenshots/mainmenu.png" alt="Ping-Pong Logo" width="300"/>
-  <h1>Ping-Pong</h1>
+  <img src="./assets/images/logo.png" alt="Ping-Pong Logo" width="300"/>
 </div>
 
 <p align="center">
