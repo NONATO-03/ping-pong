@@ -2,9 +2,9 @@
     <a href="./README.md">🇺🇸 Read in English</a>
 </div>
 
-<div align="center">
-  <img src="./assets/images/logo.png" alt="Ping-Pong Logo" width="300"/>
-</div>
+<p align="center">
+  <img src="./assets/images/ping-pong.gif" alt="Ping-Pong Logo" style="max-width: 300px;">
+</p>
 
 <p align="center">
   A experiência clássica e viciante do Ping-Pong, desenvolvida em Python.
@@ -106,5 +106,6 @@ Este projeto foi desenvolvido com as seguintes tecnologias:
 Feito com ❤️ por **Vitor Nonato Nascimento**.
 
 - **GitHub:** [https://github.com/NONATO-03](https://github.com/NONATO-03)
+
 
 
