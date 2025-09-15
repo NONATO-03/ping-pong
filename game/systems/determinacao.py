@@ -1,8 +1,6 @@
 import time
-from tkinter import font
 import pygame
 import os
-import math
 
 # TUDO RELACIONADO AO EFETIO "DETERMINAÇÃO
 
