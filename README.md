@@ -7,7 +7,7 @@
 </div>
 
 <p align="center">
-  A fun and customizable Ping-Pong game built with Python.
+  The classic and addictive Ping-Pong experience, developed in Python.
   <br />
   <a href="#features"><strong>Explore the Features »</strong></a>
   <br />
