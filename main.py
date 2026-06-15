@@ -74,6 +74,9 @@ r_paddle = Raquete(ARENA_RIGHT - 30, ARENA_CENTER_Y, is_left_paddle=False)
 ball = Bola(ARENA_CENTER_X, ARENA_CENTER_Y)
 placar = Placar()
 determinacao_manager = DeterminacaoManager(l_paddle, r_paddle, placar, som)
+# Bot criado uma unica vez (antes era recriado a cada frame dentro do loop).
+# Suas referencias (raquete, bola, limites) sao estaveis durante a partida.
+bot = BotController(r_paddle, ball, ARENA_TOP, ARENA_BOTTOM)
 GAME_TIME_LIMIT = 5 * 60
 
 # Criação dos obstáculos em forma de cruz
@@ -293,7 +296,6 @@ while running:
             if keys[pygame.K_DOWN]: r_paddle.start_move_down()
             else: r_paddle.stop_move_down()
         elif modo_escolhido == "bot":
-            bot = BotController(r_paddle, ball, ARENA_TOP, ARENA_BOTTOM)
             bot.update()
             if keys[pygame.K_w]: l_paddle.start_move_up()
             else: l_paddle.stop_move_up()
