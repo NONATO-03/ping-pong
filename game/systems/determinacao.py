@@ -88,7 +88,7 @@ class DeterminacaoManager:
         self.stop_music()
 
     def play_music(self):
-        
+
         if not self.music_playing:
             pygame.mixer.music.stop()
             pygame.mixer.music.load(DETERMINACAO_MUSIC_PATH)
@@ -97,7 +97,7 @@ class DeterminacaoManager:
             self.music_playing = True
 
     def stop_music(self):
-        
+
         if self.music_playing:
             pygame.mixer.music.stop()
             self.music_playing = False
@@ -112,7 +112,7 @@ class DeterminacaoManager:
         if not self.ativo or not self.start_time:
             return 0
         return max(0, DETERMINACAO_DURACAO - (time.time() - self.start_time))
-    
+
     def ativar(self, side):
         self.ativo = True
         self.start_time = time.time()
@@ -197,7 +197,7 @@ class DeterminacaoCutscene:
             if elapsed > 5:
                 self.fase = 2
                 self.start_time = agora
-        # Fase 2: só ativa o efeito 
+        # Fase 2: só ativa o efeito
         elif self.fase == 2:
             if elapsed > 1:
                 self.fase = 3
@@ -206,7 +206,7 @@ class DeterminacaoCutscene:
         # Fase 3: Fim da cutscene
 
     def draw(self):
-        # Fade-in da tela escurecendo 
+        # Fade-in da tela escurecendo
         tempo_fade = min(1.5, time.time() - self.start_time)
         alpha = int(200 * (tempo_fade / 1.5))
         overlay = pygame.Surface(self.screen.get_size(), pygame.SRCALPHA)
@@ -264,7 +264,7 @@ class DeterminacaoCutscene:
         self.ativo = True
         self.start_time = time.time()
         self.paddle_side = side
-        self.onda_start_time = time.time()  
+        self.onda_start_time = time.time()
         if side == "left":
             self.l_paddle.height = 190
             self.l_paddle.color = arcoiris_color(0)

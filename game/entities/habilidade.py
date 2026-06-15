@@ -23,7 +23,7 @@ class Habilidade:
         """
         fruta_radius = 28  # Define o raio padrão para todas as frutas.
 
-        # Atributos de Posição e Movimento 
+        # Atributos de Posição e Movimento
         self.x = ARENA_CENTER_X  # Posição inicial X no centro da arena
         self.y = ARENA_CENTER_Y  # Posição inicial Y no centro da arena
         self.x_move = random.choice([-7, 7])  # Define uma velocidade horizontal inicial aleatória
@@ -48,7 +48,7 @@ class Habilidade:
             # Garante que a fruta não fique "presa" fora da tela após a colisão
             self.x = max(ARENA_LEFT + self.radius, min(self.x, ARENA_RIGHT - self.radius))
 
-        # Verifica colisão com as paredes verticais 
+        # Verifica colisão com as paredes verticais
         if self.y - self.radius <= ARENA_TOP or self.y + self.radius >= ARENA_BOTTOM:
             self.bounce_y()
             # Garante que a fruta não fique presa fora da tela após a colisão
@@ -94,8 +94,8 @@ class GerenciadorHabilidades:
         self.power_colors = power_colors
         self.max_frutas = max_frutas
         self.spawn_interval = spawn_interval
-        
-        # Atributos de Controle 
+
+        # Atributos de Controle
         self.frutas = []  # Lista que armazena as frutas ativas na arena
         self.last_spawn = time.time()  # Timestamp do último surgimento de fruta
 
@@ -118,10 +118,10 @@ class GerenciadorHabilidades:
             # Escolhe um tipo de habilidade aleatoriamente do dicionário
             tipo = random.choice(list(self.power_colors.keys()))
             cor = self.power_colors[tipo][0]
-            
+
             # Cria a nova fruta e a adiciona à lista de frutas ativas
             self.frutas.append(Habilidade(cor, tipo))
-            self.last_spawn = now  
+            self.last_spawn = now
 
     def reset(self):
         """

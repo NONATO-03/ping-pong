@@ -3,7 +3,7 @@ import os
 
 #ARMAZENA ALGUMAS VARIAVEIS QUE SÃO UTILIZADAS NO CÓDIGO TODO
 
-# Inicialização do pygame 
+# Inicialização do pygame
 pygame.init()
 info = pygame.display.Info()
 WIDTH = info.current_w
@@ -50,7 +50,7 @@ POWER_TEXTS = {
     "determinacao": "DETERMINAÇÃO"
 }
 
-# Imagens das frutas 
+# Imagens das frutas
 def carregar_fruta_images():
     import pygame
     import os
@@ -72,7 +72,7 @@ def carregar_map_images():
     for nome in nomes:
         path = os.path.join("assets", "images", "arenas", f"{nome}.png")
         if os.path.exists(path):
-            img = pygame.image.load(path)  
+            img = pygame.image.load(path)
             imagens.append(img)
         else:
             imagens.append(None)

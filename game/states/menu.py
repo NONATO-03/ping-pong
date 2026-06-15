@@ -37,7 +37,7 @@ class BolaMenu:
         # Define uma velocidade e direção iniciais aleatórias
         self.x_move = random.choice([-1, 1]) * random.uniform(3, 5)
         self.y_move = random.choice([-1, 1]) * random.uniform(3, 5)
-        self.rastro = []  
+        self.rastro = []
         self.som = som
 
     def move(self, WIDTH, HEIGHT):
@@ -48,17 +48,17 @@ class BolaMenu:
             WIDTH (int): Largura da tela.
             HEIGHT (int): Altura da tela.
         """
-        # Gerenciamento do Rastro 
+        # Gerenciamento do Rastro
         self.rastro.append({'x': self.x, 'y': self.y, 'radius': self.radius, 'alpha': 180, 'color': self.color})
         for r in self.rastro:
-            r['radius'] *= 0.85  
-            r['alpha'] -= 15  
+            r['radius'] *= 0.85
+            r['alpha'] -= 15
         self.rastro = [r for r in self.rastro if r['alpha'] > 0 and r['radius'] > 1]
 
         # Movimento e Colisão
         self.x += self.x_move
         self.y += self.y_move
-        
+
         bateu = False
         if self.x - self.radius < 0 or self.x + self.radius > WIDTH:
             self.x_move *= -1
@@ -66,7 +66,7 @@ class BolaMenu:
         if self.y - self.radius < 0 or self.y + self.radius > HEIGHT:
             self.y_move *= -1
             bateu = True
-            
+
         if bateu:
             try:
                 self.som.play_som_parede(volume=0.01)
@@ -92,13 +92,13 @@ def draw_bola_menu(screen, bola_menu):
         cor = r.get('color', (255, 255, 255))
         pygame.draw.circle(surf, cor + (int(r['alpha']),), (int(r['radius']), int(r['radius'])), int(r['radius']))
         screen.blit(surf, (r['x'] - r['radius'], r['y'] - r['radius']))
-        
+
     # Desenha a bola principal
     pygame.draw.circle(screen, bola_menu.color, (int(bola_menu.x), int(bola_menu.y)), bola_menu.radius)
 
 
 
-# CLASSE DE ESTADO DO MENU 
+# CLASSE DE ESTADO DO MENU
 
 
 class MenuState:
@@ -118,7 +118,7 @@ class MenuState:
         self.WIDTH = WIDTH
         self.HEIGHT = HEIGHT
         self.som = som
-        
+
         # Estado do Menu Principal
         self.menu_selected_idx = 0  # Índice da opção de menu selecionada (0: Jogar, 1: Ajuda, etc.)
         self.menu_continuar = False  # Flag para saber se as opções do menu (Jogar, etc.) estão visíveis
@@ -166,13 +166,13 @@ class MenuState:
         else:
             return game_state, selected_map_idx
 
-    # Funções de Loop para Cada Tela do Menu 
+    # Funções de Loop para Cada Tela do Menu
 
     def run_principal(self):
         """Executa a lógica e o loop de eventos para a tela do menu principal"""
         screen = pygame.display.get_surface()
 
-        # Se a animação das letras estiver ativa entra em um loop 
+        # Se a animação das letras estiver ativa entra em um loop
         if self.letras_quicando:
             draw_menu_principal(self.menu_selected_idx, mostrar_opcoes=self.menu_continuar,
                                 letras_bolas=self.letras_bolas, letras_voltando=self.letras_voltando)
@@ -199,16 +199,16 @@ class MenuState:
                     if abs(letra['x'] - letra['target_x']) > 2 or abs(letra['y'] - letra['target_y']) > 2:
                         todas_no_lugar = False
                 if todas_no_lugar:
-                    self.letras_quicando = False  
-            
+                    self.letras_quicando = False
+
             self.bola_menu.move(self.WIDTH, self.HEIGHT)
             draw_bola_menu(screen, self.bola_menu)
-            
+
             # Loop de eventos simplificado durante a animação
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_x):
                     return "quit", 0
-            
+
             pygame.display.flip()
             pygame.time.Clock().tick(60)
             return "menu", 0
@@ -230,7 +230,7 @@ class MenuState:
             if event.type == pygame.MOUSEBUTTONDOWN and exit_rect.collidepoint(event.pos):
                 return "quit", 0
 
-            # Lógica de seleção das opções do menu 
+            # Lógica de seleção das opções do menu
             if self.menu_continuar:
                 if mouse_idx is not None:
                     self.menu_selected_idx = mouse_idx
@@ -251,7 +251,7 @@ class MenuState:
                         if self.menu_selected_idx == 0: return "modo", 0
                         if self.menu_selected_idx == 1: return "ajuda", 0
                         if self.menu_selected_idx == 2: return "creditos", 0
-            
+
             # Ativa as opções do menu com a tecla Espaço
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 self.som.play_som_menu_selecao()
@@ -270,7 +270,7 @@ class MenuState:
                         letra = pygame.key.name(event.key).upper()
                         if letra in "PINGPONG":
                             ativar_animacao = True
-                    
+
                     if ativar_animacao:
                         self.letras_quicando = True
                         self.letras_quicando_start = time.time()
@@ -288,7 +288,7 @@ class MenuState:
                                 'target_x': x, 'target_y': y
                             })
                         return "menu", 0
-                        
+
         pygame.display.flip()
         pygame.time.Clock().tick(60)
         return "menu", 0
@@ -298,7 +298,7 @@ class MenuState:
         exit_rect = draw_ajuda()
         self.bola_menu.move(self.WIDTH, self.HEIGHT)
         draw_bola_menu(pygame.display.get_surface(), self.bola_menu)
-        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT: return "quit", 0
             if event.type == pygame.KEYDOWN and event.key == pygame.K_z:
@@ -307,7 +307,7 @@ class MenuState:
             if event.type == pygame.MOUSEBUTTONDOWN and exit_rect.collidepoint(event.pos):
                 self.som.play_som_menu_selecao()
                 return "menu", 0
-        
+
         pygame.display.flip()
         pygame.time.Clock().tick(60)
         return "ajuda", 0
@@ -330,7 +330,7 @@ class MenuState:
                 if exit_rect.collidepoint(event.pos):
                     self.som.play_som_menu_selecao()
                     return "menu", 0
-        
+
         pygame.display.flip()
         pygame.time.Clock().tick(60)
         return "creditos", 0
@@ -343,10 +343,10 @@ class MenuState:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT: return "quit", None
-            
+
             if mouse_idx is not None:
                 self.menu_selected_idx = mouse_idx
-            
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if mouse_idx is not None:
                     self.som.play_som_menu_selecao()
@@ -372,7 +372,7 @@ class MenuState:
                 if event.key == pygame.K_z:
                     self.som.play_som_menu_selecao()
                     return "menu", None
-        
+
         pygame.display.flip()
         pygame.time.Clock().tick(60)
         return "modo", None
@@ -380,30 +380,30 @@ class MenuState:
     def run_map_select(self, selected_map_idx):
         """Executa a lógica e o loop de eventos para a tela de Seleção de Mapa"""
         _, mouse_idx = draw_map_select_menu(selected_map_idx)
-        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT: return "quit", selected_map_idx
-            
+
             if mouse_idx is not None:
                 selected_map_idx = mouse_idx
 
             if event.type == pygame.MOUSEBUTTONDOWN and mouse_idx is not None:
                 self.som.play_som_menu_selecao()
                 return "playing", selected_map_idx
-            
+
             if event.type == pygame.KEYDOWN:
                 last_selected_map_idx = selected_map_idx
                 if event.key == pygame.K_LEFT and selected_map_idx % 3 > 0: selected_map_idx -= 1
                 if event.key == pygame.K_RIGHT and selected_map_idx % 3 < 2: selected_map_idx += 1
                 if event.key == pygame.K_UP and selected_map_idx >= 3: selected_map_idx -= 3
                 if event.key == pygame.K_DOWN and selected_map_idx < 3: selected_map_idx += 3
-                
+
                 if selected_map_idx != last_selected_map_idx:
                     self.som.play_som_menu_selecao()
-                
+
                 if event.key == pygame.K_RETURN:
                     return "playing", selected_map_idx
-        
+
         pygame.display.flip()
         pygame.time.Clock().tick(60)
         return "map_select", selected_map_idx

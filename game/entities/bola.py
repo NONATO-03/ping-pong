@@ -23,11 +23,11 @@ class Bola:
             x: A posição inicial da bola no eixo X
             y: A posição inicial da bola no eixo Y
         """
-        # Atributos de Posição e Aparencia 
+        # Atributos de Posição e Aparencia
         self.x = x
         self.y = y
         self.radius = 14  # Raio da bola em pixels
-        self.color = (255, 255, 255)  # Cor inicial da bola 
+        self.color = (255, 255, 255)  # Cor inicial da bola
         self.rastro = []  # Lista de dicionários para criar o efeito de rastro
 
         #  Atributos de Movimento e Velocidade
@@ -36,8 +36,8 @@ class Bola:
         self.y_move = self.base_speed  # Velocidade atual no eixo Y
         self.incremento_raquetada = 0.2  # Aumento de velocidade a cada rebatida
 
-        # Atributos de Estado e Controle 
-        self.last_hit_by = None  # Indica qual jogador rebateu por ultimo 
+        # Atributos de Estado e Controle
+        self.last_hit_by = None  # Indica qual jogador rebateu por ultimo
         self.spawn_time = time.time()  # Timestamp de quando a bola foi criada
 
         # Atributos para Efeitos Especiais
@@ -73,22 +73,22 @@ class Bola:
         # Gerenciamento do Rastro
         # Adiciona a posição atual ao rastro
         self.rastro.append({'x': self.x, 'y': self.y, 'radius': self.radius, 'alpha': 180, 'color': self.color})
-        
+
         # Atualiza cada partícula do rastro
         for r in self.rastro:
             r['radius'] *= 0.85  # Reduz o tamanho
-            r['alpha'] -= 15  
-            r['radius'] = max(2, r['radius'])  
-            r['alpha'] = max(0, r['alpha'])  
-        
+            r['alpha'] -= 15
+            r['radius'] = max(2, r['radius'])
+            r['alpha'] = max(0, r['alpha'])
+
         # Remove as partículas do rastro que se tornaram invisíveis
         self.rastro = [r for r in self.rastro if r['alpha'] > 0 and r['radius'] > 1]
-        
+
         # Atualização da Posição
         self.x += self.x_move
         self.y += self.y_move
-        
-        # Lógica de Colisão Específica do Mapa BETA 
+
+        # Lógica de Colisão Específica do Mapa BETA
         if mapa_escolhido == 1 and fan_angle is not None:
             # Só checa colisão após 1 segundo para evitar colidir ao nascer
             if time.time() - self.spawn_time > 1:
@@ -98,7 +98,7 @@ class Bola:
                     dy = self.y - center_y
                     barra_dx = math.cos(fan_angle)
                     barra_dy = math.sin(fan_angle)
-                    
+
                     if abs(dx * barra_dx) > abs(dy * barra_dy):
                         self.bounce_x()
                     else:
@@ -125,15 +125,15 @@ class Bola:
             tempo_passado (float, optional): O tempo total de jogo, para ajustar a dificuldade. Default é 0
         """
         self.atualizar_velocidade(tempo_passado)
-        
+
         # Reposiciona a bola no centro
         self.x = center_x
         self.y = center_y
-        
+
         # Define uma nova direção inicial aleatória
         self.x_move = self.base_speed if random.choice([True, False]) else -self.base_speed
         self.y_move = self.base_speed if random.choice([True, False]) else -self.base_speed
-        
+
         # Limpa o rastro e reseta os contadores e flags de estado
         self.rastro.clear()
         self.spawn_time = time.time()
@@ -176,13 +176,13 @@ class Bola:
             incremento += 0.6
         elif self.fogo_ativo:
             incremento += 0.2
-            
+
         # Aplica o incremento na direção atual da bola
         if self.x_move > 0:
             self.x_move += incremento
         else:
             self.x_move -= incremento
-            
+
         if self.y_move > 0:
             self.y_move += incremento
         else:
@@ -254,7 +254,7 @@ class Bola:
             self.color = (255, 120, 0)  # Laranja
         else:
             self.color = (255, 255, 255)  # Branco
-        
+
         # Garante que a cor do rastro seja a mesma da bola
         for r in self.rastro:
             r['color'] = self.color
@@ -271,7 +271,7 @@ class Bola:
             self.bounce_y()
             som.play_som_parede()
 
-        # 6. Lógica de Pontuação 
+        # 6. Lógica de Pontuação
         # Ponto para o jogador da direita-----
         if self.x - self.radius < ARENA_LEFT:
             placar.r_score += 3 if morango_ativo else 1
@@ -286,7 +286,7 @@ class Bola:
 
         # 7. Colisão com as Raquetes-----------------------------------------------------------------------------------------------------------
 
-        # Raquete Esquerda 
+        # Raquete Esquerda
         if (l_paddle.x - l_paddle.width // 2 < self.x < l_paddle.x + l_paddle.width // 2 and
                 l_paddle.y - l_paddle.height // 2 < self.y < l_paddle.y + l_paddle.height // 2):
             self.x = l_paddle.x + l_paddle.width // 2 + self.radius  # Corrige posição para evitar bugs rs
@@ -294,7 +294,7 @@ class Bola:
             self.bounce_x()
             self.last_hit_by = "left"
             impact_left = True
-            
+
             power = l_paddle.get_power()
             if power == "banana" and not l_paddle.power_used:
                 self.x_move *= 10  # Aumenta drasticamente a velocidade
@@ -303,7 +303,7 @@ class Bola:
                 som.play_som_tiro_poderoso()
             else:
                 som.play_som_raquete()
-                
+
             if power == "blueberry":
                 # Cria a fake ball com direção diferente da bola original
                 angle = random.uniform(0, 2 * math.pi)
@@ -312,7 +312,7 @@ class Bola:
                 fake_y_move = math.sin(angle) * speed
                 fake_balls.append(BolaFake(self.x, self.y, fake_x_move, fake_y_move))
                 som.play_som_habilidade_coletada()
-                
+
             aplicar_determinacao_na_bola(self, l_paddle, r_paddle, determinacao_manager)
         else:
             impact_left = False
@@ -329,7 +329,7 @@ class Bola:
                 impact_left = True
                 som.play_som_raquete()
 
-        #  Raquete Direita 
+        #  Raquete Direita
         if (r_paddle.x - r_paddle.width // 2 < self.x < r_paddle.x + r_paddle.width // 2 and
                 r_paddle.y - r_paddle.height // 2 < self.y < r_paddle.y + r_paddle.height // 2):
             self.x = r_paddle.x - r_paddle.width // 2 - self.radius
@@ -337,7 +337,7 @@ class Bola:
             self.bounce_x()
             self.last_hit_by = "right"
             impact_right = True
-            
+
             power = r_paddle.get_power()
             if power == "banana" and not r_paddle.power_used:
                 self.x_move *= 10
@@ -359,7 +359,7 @@ class Bola:
             aplicar_determinacao_na_bola(self, l_paddle, r_paddle, determinacao_manager)
         else:
             impact_right = False
-        
+
         # Raquete Direita (Espelhada - Melancia)
         if r_paddle.get_power() == "melancia":
             espelhada_y = ARENA_BOTTOM - (r_paddle.y - ARENA_TOP)
@@ -416,11 +416,11 @@ class BolaFake(Bola):
             r['radius'] = max(2, r['radius'] * 0.85)
             r['alpha'] = max(0, r['alpha'] - 15)
         self.rastro = [r for r in self.rastro if r['alpha'] > 0 and r['radius'] > 1]
-        
+
         # Movimento
         self.x += self.x_move
         self.y += self.y_move
-        
+
         # Checa colisão com as paredes e incrementa o contador
         if self.y - self.radius < ARENA_TOP or self.y + self.radius > ARENA_BOTTOM:
             self.bounce_y()
@@ -458,14 +458,14 @@ def colide_barra_giratoria(ball_x, ball_y, ball_radius, center_x, center_y, barr
     # Calcula a posição da bola relativa ao centro da barra
     dx = ball_x - center_x
     dy = ball_y - center_y
-    
+
     # Rotaciona as coordenadas da bola pelo ângulo inverso da barra
     # Isso alinha a barra com o eixo horizontal no novo sistema de coordenadas
     rx = dx * math.cos(-angle) - dy * math.sin(-angle)
     ry = dx * math.sin(-angle) + dy * math.cos(-angle)
-    
+
     # Agora, verifica a colisão como se fosse um retângulo não rotacionado
     if abs(rx) < barra_len / 2 + ball_radius and abs(ry) < barra_thick / 2 + ball_radius:
         return True
-        
+
     return False

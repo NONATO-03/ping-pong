@@ -29,7 +29,7 @@ def get_ball():
     """Função auxiliar para passar o objeto bola para outros módulos."""
     return ball
 
-# Flags e Variáveis de Controle 
+# Flags e Variáveis de Controle
 cutscene_determinacao = None
 tempo_parado = False
 tempo_parado_start = None
@@ -42,7 +42,7 @@ tempo_acabando_avisado = False
 tempo_acabando_start = None
 musica_tempo_acabando_tocando = False
 arena_aleatoria_idx = None
-INDICE_DA_ARENA_ALEATORIA = 5 
+INDICE_DA_ARENA_ALEATORIA = 5
 
 # INICIALIZAÇÃO DO PYGAME
 
@@ -77,7 +77,7 @@ placar = Placar()
 determinacao_manager = DeterminacaoManager(l_paddle, r_paddle, placar, som)
 GAME_TIME_LIMIT = 5 * 60
 
-# Criação dos obstáculos em forma de cruz 
+# Criação dos obstáculos em forma de cruz
 obstacle1 = ObstaculoCruz(ARENA_X + ARENA_W * 0.25, ARENA_Y + ARENA_H * 0.25, size=80)
 obstacle2 = ObstaculoCruz(ARENA_X + ARENA_W * 0.75, ARENA_Y + ARENA_H * 0.75, size=80)
 obstacles = [obstacle1, obstacle2]
@@ -96,9 +96,9 @@ running = True
 while running:
     tempo_str = ""
 
-    
+
     # 1. CONTROLE DE MÚSICA GLOBAL
-    
+
     if game_state in ["menu", "modo", "ajuda", "creditos", "map_select"]:
         if not musica_menu_tocando:
             som.stop_musica_fundo()
@@ -113,7 +113,7 @@ while running:
             som.stop_musica_menu()
             musica_menu_tocando = False
 
-        # CONTROLE DE MÚSICA DA PARTIDA 
+        # CONTROLE DE MÚSICA DA PARTIDA
         if game_state == "playing":
             # Calcula o tempo restante
             tempo_passado = 0 if start_time is None else time.time() - start_time
@@ -146,15 +146,15 @@ while running:
                     musica_fundo_tocando = True
                     musica_tempo_acabando_tocando = False
 
-    
+
     # 2. LÓGICA DOS MENUS
-    
+
     if game_state in ["menu", "modo", "ajuda", "creditos", "map_select"]:
         next_state, extra = menu_state.run(game_state, selected_map_idx)
         if next_state == "quit":
             running = False
             continue
-        
+
         if next_state == "map_select":
             if extra in ["local", "bot"]:
                 modo_escolhido = extra
@@ -162,11 +162,11 @@ while running:
                 selected_map_idx = extra
             game_state = next_state
             continue
-        
+
         # Inicia a partida quando o estado muda para "playing"
         if next_state == "playing":
-            mapa_escolhido = selected_map_idx  
-            if mapa_escolhido == INDICE_DA_ARENA_ALEATORIA:  
+            mapa_escolhido = selected_map_idx
+            if mapa_escolhido == INDICE_DA_ARENA_ALEATORIA:
                 arena_aleatoria_idx = random.randint(0, INDICE_DA_ARENA_ALEATORIA - 1)
             else:
                 arena_aleatoria_idx = None
@@ -196,9 +196,9 @@ while running:
                 musica_tempo_acabando_tocando = False
             continue
 
-    
+
     # 3. LÓGICA DA PARTIDA
-    
+
     if game_state == "playing":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -244,13 +244,13 @@ while running:
                     screen, "right", "DIREITA", determinacao_manager.ativar
                 )
                 determinacao_manager.l_seq = 0
-        
+
         # LÓGICA DOS OBSTÁCULOS E ARENAS ESPECIAIS
         arena_idx = mapa_escolhido
         if mapa_escolhido == INDICE_DA_ARENA_ALEATORIA and arena_aleatoria_idx is not None:
             arena_idx = arena_aleatoria_idx
 
-        if arena_idx == 2:  # Gamma 
+        if arena_idx == 2:  # Gamma
             for obstacle in obstacles:
                 obstacle.rotate()
 
@@ -268,7 +268,7 @@ while running:
         # ATUALIZAÇÃO DAS FRUTAS
         gerenciador_habilidades.update()
 
-        # CONTROLE DO TEMPO 
+        # CONTROLE DO TEMPO
         tempo_passado = 0 if start_time is None else time.time() - start_time
         tempo_restante = max(0, GAME_TIME_LIMIT - tempo_passado)
         minutos = int(tempo_restante // 60)
@@ -304,7 +304,7 @@ while running:
         l_paddle.move(ARENA_TOP, ARENA_BOTTOM)
         r_paddle.move(ARENA_TOP, ARENA_BOTTOM)
 
-        # LÓGICA DOS OBSTÁCULOS E ARENAS ESPECIAIS 
+        # LÓGICA DOS OBSTÁCULOS E ARENAS ESPECIAIS
         arena_idx = mapa_escolhido
         if mapa_escolhido == INDICE_DA_ARENA_ALEATORIA and arena_aleatoria_idx is not None:
             arena_idx = arena_aleatoria_idx
@@ -325,15 +325,15 @@ while running:
             ARENA_LEFT, ARENA_RIGHT, ARENA_TOP, ARENA_BOTTOM,
             ARENA_CENTER_X, ARENA_CENTER_Y, tempo_passado,
             fan_angle=visual.fan_angle,
-            mapa_escolhido=arena_idx, 
+            mapa_escolhido=arena_idx,
             determinacao_manager=determinacao_manager,
-            obstacles=obstacles if arena_idx == 2 else None  
+            obstacles=obstacles if arena_idx == 2 else None
         )
 
         l_paddle.update_power()
         r_paddle.update_power()
 
-        # LÓGICA DE COLETA DE FRUTAS 
+        # LÓGICA DE COLETA DE FRUTAS
         for h in gerenciador_habilidades.frutas[:]:
             if pode_coletar_fruta(l_paddle, determinacao_manager):
                 if (abs(l_paddle.x - h.x) < l_paddle.width//2 + h.radius and
@@ -350,7 +350,7 @@ while running:
                     som.play_som_coletar_fruta()
                     continue
 
-        # CONDIÇÃO DE FIM DE JOGO 
+        # CONDIÇÃO DE FIM DE JOGO
         winner = placar.check_winner()
         if winner or tempo_restante <= 0:
             game_state = "gameover"
@@ -360,7 +360,7 @@ while running:
 
         pygame.festival_ativo = festival.ativo
 
-        # RENDERIZAÇÃO 
+        # RENDERIZAÇÃO
         render_visual(
             l_paddle.x, l_paddle.y, l_paddle.get_power(), l_paddle.get_power_time_left(),
             r_paddle.x, r_paddle.y, r_paddle.get_power(), r_paddle.get_power_time_left(),
@@ -381,7 +381,7 @@ while running:
             arena_aleatoria_idx=arena_aleatoria_idx,
             indice_arena_aleatoria=INDICE_DA_ARENA_ALEATORIA
         )
-        
+
         # Desenha os novos obstáculos se o mapa 2 estiver ativo
         if arena_idx == 2:
             for obstacle in obstacles:
@@ -398,7 +398,7 @@ while running:
         continue
 
     # 4. TELA DE GAME OVER
-    
+
     if game_state == "gameover":
         winner = "ESQUERDA" if placar.l_score > placar.r_score else "DIREITA"
         som.play_som_fim_jogo()

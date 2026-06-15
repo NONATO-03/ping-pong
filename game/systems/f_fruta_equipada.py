@@ -22,7 +22,7 @@ def draw_power_frame(screen, font_path, x, y, tipo, tempo_left, tempo_total, get
         img = get_fruit_image(tipo)
         if img is None:
             img = pygame.Surface((28, 28), pygame.SRCALPHA)
-            pygame.draw.circle(img, (120,120,120), (14,14), 14)  
+            pygame.draw.circle(img, (120,120,120), (14,14), 14)
         else:
             img = pygame.transform.smoothscale(img, (28, 28))
         texto = POWER_TEXTS.get(tipo, "")
@@ -35,13 +35,13 @@ def draw_power_frame(screen, font_path, x, y, tipo, tempo_left, tempo_total, get
     # Fundo do frame
     frame_surf = pygame.Surface((frame_w, frame_h), pygame.SRCALPHA)
     pygame.draw.rect(frame_surf, (40,40,60,180), frame_surf.get_rect(), border_radius=12)
-    # Barra de tempo 
+    # Barra de tempo
     barra_w = frame_w - 16
     barra_h = 8
     barra_x = 8
     barra_y = frame_h - barra_h - 6
     pygame.draw.rect(frame_surf, (80,80,120,90), (barra_x, barra_y, barra_w, barra_h), border_radius=4)
-    # Barra de tempo 
+    # Barra de tempo
     if tempo_left is None:
         tempo_left = 0
     if tempo_total is None or tempo_total == 0:

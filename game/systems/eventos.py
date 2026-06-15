@@ -110,7 +110,7 @@ class EventoIntroAnim:
                 if novo_nome != self.evento_nome_atual:
                     self.evento_nome_atual = novo_nome
                     if self.sistema_som:
-                        self.sistema_som.play_som_click() 
+                        self.sistema_som.play_som_click()
             else:
                 self.evento_nome_atual = self.evento_final
                 self.state = "parado"
@@ -139,7 +139,7 @@ class EventoIntroAnim:
         evento_rect = evento_text.get_rect(center=frame1_rect.center)
         screen.blit(evento_text, evento_rect)
 
-        # Frame 2: nome do evento colorido 
+        # Frame 2: nome do evento colorido
         font2 = pygame.font.Font(self.FONT_PATH, 18)
         frame2_rect = pygame.Rect(
             self.WIDTH//2 - self.frame2_w//2,

@@ -30,21 +30,21 @@ class BotController:
 
         Determina para onde a raquete deve se mover com base na posição da bola
         """
-        # Define o alvo vertical (target_y) 
+        # Define o alvo vertical (target_y)
         # Verifica se existe uma "bola extra" ativa e a torna o alvo prioritário
         if hasattr(self.ball, "bola_extra") and self.ball.bola_extra is not None and self.ball.bola_extra.ativo:
             target_y = self.ball.bola_extra.y
         else:
             # Caso contrário, o alvo é a bola principal
             target_y = self.ball.y
-        
-        #  Limita o movimento da raquete dentro da arena 
+
+        #  Limita o movimento da raquete dentro da arena
         # Calcula as posições verticais mínima e máxima que a raquete pode alcançar
         min_y = self.arena_top + self.paddle.height // 2 + 8
         max_y = self.arena_bottom - self.paddle.height // 2 - 8
         target_y = max(min_y, min(max_y, target_y))
 
-        # Lógica de Movimento 
+        # Lógica de Movimento
         # Calcula a distância vertical entre a raquete e o alvo
         diff = target_y - self.paddle.y
         speed = self.paddle.move_speed

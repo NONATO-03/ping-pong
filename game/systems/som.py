@@ -10,7 +10,7 @@ class SistemaDeSom:
     # O construtor é executado automaticamente quando um novo objeto SistemaDeSom é criado
     # Sua função é inicializar o sistema de áudio e pré-carregar todos os sons necessários
     def __init__(self):
-        # Inicializa todos os módulos do mixer do Pygame. 
+        # Inicializa todos os módulos do mixer do Pygame.
         pygame.mixer.init()
 
         # --- Dicionários de Áudio ---
@@ -31,7 +31,7 @@ class SistemaDeSom:
         self.music_path_folder = os.path.join(self.assets_path, 'music')
         self.sfx_path_folder = os.path.join(self.assets_path, 'sfx')
 
-        # Listas de Músicas 
+        # Listas de Músicas
         # Agrupar as músicas em listas facilita a seleção aleatória
         self.musicas_menu = [
             os.path.join(self.music_path_folder, 'musica_menu.wav'),
@@ -52,7 +52,7 @@ class SistemaDeSom:
         ]
 
         # Carregamento dos Efeitos Sonoros
-        # Dicionário 
+        # Dicionário
         efeitos_sonoros = {
             'desaparece': 'som_poder_desaparece.wav',
             'coleta': 'som_coleta.wav',
@@ -66,7 +66,7 @@ class SistemaDeSom:
             'menu_selecao': 'som_menu_selecao.wav',
             'tempo_parando': 'som_tempo_parando.wav',
             'tempo_voltando': 'som_tempo_voltando.wav',
-            'click': 'som_click.wav' 
+            'click': 'som_click.wav'
         }
 
         # Itera sobre o dicionário para carregar cada efeito sonoro
@@ -85,7 +85,7 @@ class SistemaDeSom:
         for sfx in self.sons.values():
             sfx.set_volume(0.05)
 
-    # Métodos de Controle de Efeitos Sonoros 
+    # Métodos de Controle de Efeitos Sonoros
     # Cada método toca um som específico. O nome do método descreve a ação
 
     def play_som_habilidade_desaparece(self):
@@ -122,7 +122,7 @@ class SistemaDeSom:
     def play_som_click(self):
         if 'click' in self.sons: self.sons['click'].play()
 
-    # Métodos de Controle de Músicas de Fundo 
+    # Métodos de Controle de Músicas de Fundo
     # As músicas usam o canal de música do Pygame (`pygame.mixer.music`)
     # que é diferente dos canais de SFX e só pode tocar um áudio por vez
 

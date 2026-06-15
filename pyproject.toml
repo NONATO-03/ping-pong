@@ -1,0 +1,33 @@
+[project]
+name = "ping-pong"
+version = "0.1.0"
+description = "Pong em tela cheia feito com Python e pygame, com arenas, frutas/poderes, eventos e o modo Determinacao."
+requires-python = ">=3.10"
+dependencies = [
+    "pygame",
+]
+
+[project.optional-dependencies]
+# Ferramentas de desenvolvimento: pip install -e ".[dev]"
+dev = [
+    "ruff",
+    "pytest",
+]
+
+[tool.ruff]
+# O codigo e em portugues; mantemos linhas um pouco mais longas.
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+# Conjunto pragmatico: erros do pyflakes (F) e do pycodestyle (E/W).
+select = ["E", "F", "W"]
+ignore = [
+    "E501",  # linha longa: comum no codigo atual; tratado aos poucos
+    "E701",  # "if tecla: raquete.move()" em uma linha: estilo intencional do projeto
+    "E741",  # nomes de 1 letra (l/r de esquerda/direita): convencao do projeto
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Os drivers "dummy" do SDL (janela/audio falsos) sao configurados em tests/conftest.py.

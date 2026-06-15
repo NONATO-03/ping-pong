@@ -24,7 +24,7 @@ class Raquete:
             y (int): A posição inicial da raquete no eixo Y
             is_left_paddle (bool): True se for a raquete da esquerda False se for a da direita
         """
-        # Atributos de Posição e Dimensão 
+        # Atributos de Posição e Dimensão
         self.x = x
         self.y = y
         self.width = 28  # Largura da raquete
@@ -44,7 +44,7 @@ class Raquete:
         self.is_moving_down = False  # Flag que indica se está se movendo para baixo
         self.last_move_dir = 0  # Guarda a última direção de movimento (-1 para cima, 1 para baixo, 0 parado)
 
-        # Atributos de Poderes (Power-ups) 
+        # Atributos de Poderes (Power-ups)
         self.is_left_paddle = is_left_paddle  # Identificador da raquete
         self.power_ups = {
             "uva": False, "melancia": False, "banana": False,
@@ -61,13 +61,13 @@ class Raquete:
         Args:
             screen (pygame.Surface): A superfície da tela onde a raquete será desenhada.
         """
-        # Efeito de Gelatinoso ao Parar 
+        # Efeito de Gelatinoso ao Parar
         shake = 0
         # O efeito dura 0.25 segundos após a raquete parar
         if self.shake_time and time.time() - self.shake_time < 0.25:
             # Usa uma função seno para criar uma oscilação suave
             shake = math.sin((time.time() - self.shake_time) * 20) * 8
-        
+
         # Cria o retângulo da raquete, aplicando o deslocamento do shake
         rect = pygame.Rect(self.x - self.width // 2, self.y - self.height // 2 + shake, self.width, self.height)
         pygame.draw.rect(screen, self.color, rect, border_radius=8)
@@ -82,7 +82,7 @@ class Raquete:
                 trail_surf = pygame.Surface((self.width, 24), pygame.SRCALPHA)
                 trail_rect = trail_surf.get_rect()
                 pygame.draw.rect(trail_surf, t["color"] + (alpha,), trail_rect, border_radius=8)
-                
+
                 # Posiciona e desenha a partícula do rastro na tela principal
                 screen.blit(trail_surf, (t["x"] - self.width / 2, t["y"] - 12))
 
@@ -96,17 +96,17 @@ class Raquete:
         if dir != 0:
             # Define a cor do rastro com base no jogador.
             color = (180, 180, 255) if self.is_left_paddle else (255, 180, 180)
-            
+
             # Calcula a posição inicial da partícula (na extremidade oposta ao movimento)
             offset = -self.height / 2 - 10 if dir == -1 else self.height / 2 + 10
-            
+
             # Adiciona a nova partícula à lista do rastro
             self.trail.append({
                 "x": self.x, "y": self.y + offset, "dir": dir,
                 "time": time.time(), "color": color
             })
-            
-        # Remove as partículas que já expiraram 
+
+        # Remove as partículas que já expiraram
         self.trail = [t for t in self.trail if time.time() - t["time"] < 0.3]
 
     # Métodos de Controle de Movimento
@@ -135,7 +135,7 @@ class Raquete:
             arena_bottom (int): A coordenada Y da base da área de jogo
         """
         moved = False
-        dir = 0  
+        dir = 0
 
         if self.is_moving_up:
             # Verifica se a raquete não ultrapassará o limite superior
@@ -145,7 +145,7 @@ class Raquete:
                 dir = -1
             else:
                 self.y = arena_top + self.height / 2 + 8  # Trava a posição no limite
-        
+
         elif self.is_moving_down:
             # Verifica se a raquete não ultrapassará o limite inferior
             if self.y + self.height / 2 < arena_bottom - 8:
@@ -158,7 +158,7 @@ class Raquete:
         # Se a raquete parou de se mover neste frame, inicia o timer do efeito gelatina
         if not moved and self.last_move_dir != 0:
             self.shake_time = time.time()
-        
+
         self.last_move_dir = dir  # Atualiza a última direção de movimento
         self.update_trail(dir)  # Atualiza o rastro com a direção atual
 
@@ -174,10 +174,10 @@ class Raquete:
         for other_power in list(self.power_ups.keys()):
             if self.power_ups[other_power] and other_power != power_up_type:
                 self.deactivate_power_up(other_power)
-        
+
         self.power_ups[power_up_type] = True
         self.active_power_ups[power_up_type] = time.time()
-        
+
         # Aplica o efeito específico do poder
         if power_up_type == "uva":
             self.height = 160
@@ -194,7 +194,7 @@ class Raquete:
         self.power_ups[power_up_type] = False
         if power_up_type in self.active_power_ups:
             del self.active_power_ups[power_up_type]
-        
+
         # Restaura a altura original da raquete.
         self.height = self.base_height
 
@@ -204,7 +204,7 @@ class Raquete:
             if is_active:
                 return power_name
         return None
-    
+
     def get_power_time_left(self):
         """
         Calcula e retorna o tempo restante do poder ativo
@@ -215,7 +215,7 @@ class Raquete:
         power = self.get_power()
         if not power or power not in self.active_power_ups:
             return None
-            
+
         elapsed_time = time.time() - self.active_power_ups[power]
         time_left = 20 - elapsed_time
         return max(0, time_left)  # Garante que não retorne um tempo negativado
@@ -235,7 +235,7 @@ class Raquete:
         if power in ["banana", "morango"] and self.power_used:
             self.deactivate_power_up(power)
             self.power_used = False
-        
+
         # Desativa poderes com tempo limite quando o tempo expira
         elif time_left is not None and time_left <= 0:
             self.deactivate_power_up(power)

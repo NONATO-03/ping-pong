@@ -1,12 +1,12 @@
-import pygame 
-import time 
-import os 
+import pygame
+import time
+import os
 from game.systems.arenas import (
     # Funções para desenhar diferentes arenas
     draw_arena_alpha, draw_arena_beta, draw_arena_gamma,
     draw_arena_delta, draw_arena_epsilon, draw_arena_aleatoria
 )
-import math 
+import math
 from game.systems.f_fruta_equipada import draw_power_frame
 from config import FONT_PATH
 from game.systems.determinacao import arcoiris_color
@@ -131,7 +131,7 @@ def draw_score(left, right):
     screen.blit(right_text, (right_x, right_y))
 
 def draw_mode_label(tempo_str, tempo_acabando=False, tempo_acabando_start=None):
-    # Desenha a caixa de tempo 
+    # Desenha a caixa de tempo
     font = pygame.font.Font(FONT_PATH, 28)
     color = (255,0,0) if tempo_acabando else (0,0,0)
     text = font.render(tempo_str, True, color)
@@ -200,7 +200,7 @@ def draw_menu_principal(selected_idx=0, mostrar_opcoes=False, letras_bolas=None,
         screen.blit(letra_surf, letra_rect)
         letras_rects.append((letra, letra_rect))
 
-    # Desenha as opções do menu 
+    # Desenha as opções do menu
     if not mostrar_opcoes:
         if int(t*2) % 2 == 0:
             hint_text = font_hint.render("APERTE [ESPAÇO] PARA CONTINUAR", True, (255,255,255))
@@ -251,7 +251,7 @@ def draw_menu_principal(selected_idx=0, mostrar_opcoes=False, letras_bolas=None,
     return frames, mouse_idx, exit_rect
 
 def draw_modo_menu(selected_idx=0):
-    # Desenha o menu para selecionar o modo de jogo 
+    # Desenha o menu para selecionar o modo de jogo
     screen = pygame.display.get_surface()
     font_title = pygame.font.Font(FONT_PATH, 48)
     font_opt = pygame.font.Font(FONT_PATH, 32)
@@ -333,7 +333,7 @@ def render_visual(
     arena_aleatoria_idx=None,
     indice_arena_aleatoria=None
 ):
-    
+
     # Função principal para desenhar o estado completo do jogo em um frame
     global paddle_trail_left, paddle_trail_right
     global paddle_shake_left, paddle_shake_right, paddle_shake_time_left, paddle_shake_time_right
@@ -349,7 +349,7 @@ def render_visual(
         draw_arena_epsilon,
         draw_arena_aleatoria
     ]
-    
+
     if mapa_escolhido == indice_arena_aleatoria and arena_aleatoria_idx is not None:
         if arena_aleatoria_idx == 1:
             draw_arena_beta(screen, ARENA_X, ARENA_Y, ARENA_W, ARENA_H, angle=fan_angle)
@@ -361,14 +361,14 @@ def render_visual(
         arena_func = arena_draw_functions[mapa_escolhido]
         arena_func(screen, ARENA_X, ARENA_Y, ARENA_W, ARENA_H)
 
-    # DETERMINAÇÃO 
+    # DETERMINAÇÃO
     if determinacao_manager and determinacao_manager.is_active() and hasattr(determinacao_manager, "onda_start_time"):
         tempo_onda = time.time() - determinacao_manager.onda_start_time
         if tempo_onda < 1.2:
             draw_onda_determinacao(screen, tempo_onda, determinacao_manager.get_side())
         else:
             delattr(determinacao_manager, "onda_start_time")
-    
+
     for h in habilidades:
         if h["tipo"] in ["uva", "banana", "morango", "melancia", "blueberry"]:
             draw_habilidade_fruta(h["x"], h["y"], h["tipo"])
@@ -523,17 +523,17 @@ def render_visual(
     draw_score(left_score, right_score)
     draw_mode_label(tempo_str, tempo_acabando=tempo_acabando, tempo_acabando_start=tempo_acabando_start)
 
-    # FRAME DE FRUTA EQUIPADA 
+    # FRAME DE FRUTA EQUIPADA
     from config import POWER_TOTAL_TIMER
 
     # Frame do jogador da esquerda
     if l_paddle_power:
         tempo_total = POWER_TOTAL_TIMER.get(l_paddle_power, 20)
         draw_power_frame(
-            
+
             screen,
             FONT_PATH,
-            ARENA_CENTER_X - 350, 
+            ARENA_CENTER_X - 350,
             ARENA_BOTTOM + 80,
             l_paddle_power,
             l_paddle_power_time,
@@ -545,10 +545,10 @@ def render_visual(
     if r_paddle_power:
         tempo_total = POWER_TOTAL_TIMER.get(r_paddle_power, 20)
         draw_power_frame(
-            
+
             screen,
             FONT_PATH,
-            ARENA_CENTER_X + 110,   
+            ARENA_CENTER_X + 110,
             ARENA_BOTTOM + 80,
             r_paddle_power,
             r_paddle_power_time,
@@ -557,7 +557,7 @@ def render_visual(
         )
 
 
-        # Frame de Determinação 
+        # Frame de Determinação
     if determinacao_manager and determinacao_manager.is_active():
         tempo_left = determinacao_manager.get_time_left()
         draw_power_frame(
@@ -571,7 +571,7 @@ def render_visual(
             get_fruit_image
         )
 
-from config import MAP_IMAGES  
+from config import MAP_IMAGES
 
 def draw_map_select_menu(selected_idx=0, last_selected_idx=None, som=None):
     # Desenha o menu de seleção de arena, com imagens e nomes dos mapas
@@ -608,19 +608,19 @@ def draw_map_select_menu(selected_idx=0, last_selected_idx=None, som=None):
 
         # Fundo do frame
         if i == 5:  # Arena Aleatória
-            pygame.draw.rect(screen, (10,10,20), frame_rect, border_radius=20)  
+            pygame.draw.rect(screen, (10,10,20), frame_rect, border_radius=20)
         else:
             pygame.draw.rect(screen, (180,180,180), frame_rect, border_radius=20)
 
         if i == 5:  # Arena Aleatória
             # Animação do "?"
             t = time.time()
-            float_y = math.sin(t * 2.5) * 16  
-            spin_phase = (t % 4) 
+            float_y = math.sin(t * 2.5) * 16
+            spin_phase = (t % 4)
             if spin_phase < 0.7:
-                angle = (spin_phase / 0.7) * 360  
+                angle = (spin_phase / 0.7) * 360
             else:
-                angle = math.sin(t * 0.7) * 8  
+                angle = math.sin(t * 0.7) * 8
 
             font_q = pygame.font.Font(FONT_PATH, 120)
             q_surf = font_q.render("?", True, (255,255,255))  # Branco
@@ -635,7 +635,7 @@ def draw_map_select_menu(selected_idx=0, last_selected_idx=None, som=None):
             img = pygame.transform.smoothscale(img, (frame_w-32, frame_h-32))
             img_rect = img.get_rect(center=frame_rect.center)
             screen.blit(img, img_rect)
-        
+
         name_text = font_map.render(map_names[i], True, (255,255,255))
         name_rect = name_text.get_rect(center=(frame_rect.centerx, frame_rect.bottom + 28))
         screen.blit(name_text, name_rect)
@@ -665,11 +665,11 @@ def draw_ajuda():
     font_exit = pygame.font.Font(FONT_PATH, 18)
     screen.fill((10, 10, 20))
 
-    # Título principal 
+    # Título principal
     title = font_title.render("Como jogar", True, (255,255,255))
     screen.blit(title, title.get_rect(center=(WIDTH//2, HEIGHT//2 - 320)))
 
-    # Seção de controles 
+    # Seção de controles
     section_top_y = HEIGHT//2 - 240
     section_h = 160
     section_w = 420
@@ -697,12 +697,12 @@ def draw_ajuda():
     screen.blit(txt3, (section_x_right + 36, section_top_y + 70))
     screen.blit(txt4, (section_x_right + 36, section_top_y + 110))
 
-    # Título "Durante o jogo" 
+    # Título "Durante o jogo"
     section2_top_y = section_top_y + section_h + 60
     during_title = font_sub.render("Durante o jogo", True, (255,255,255))
     screen.blit(during_title, during_title.get_rect(center=(WIDTH//2, section2_top_y)))
 
-    # Seções FRUTAS e EVENTOS 
+    # Seções FRUTAS e EVENTOS
     section2_h = 260
     section2_w = 480
     section2_x_left = WIDTH//2 - section2_w - 32
@@ -711,7 +711,7 @@ def draw_ajuda():
 
     pygame.draw.line(screen, (80,80,120), (WIDTH//2, section2_y), (WIDTH//2, section2_y + section2_h), 6)
 
-    # FRUTAS 
+    # FRUTAS
     t = time.time()
     fruta_title = arcoiris_text("FRUTAS", font_sub, t, section2_x_left + section2_w//2 - 60, section2_y)
     for surf, (x, y) in fruta_title:
@@ -743,7 +743,7 @@ def draw_ajuda():
         screen.blit(nome_surf, (section2_x_right + 36, eventos_y + i*54))
         screen.blit(desc_surf, (section2_x_right + 36, eventos_y + i*54 + 26))
 
-    # Botão de voltar 
+    # Botão de voltar
     exit_text = font_exit.render("[Z] VOLTAR", True, (200,200,200))
     exit_surf = pygame.Surface(exit_text.get_size(), pygame.SRCALPHA)
     exit_surf.blit(exit_text, (0,0))
@@ -848,7 +848,7 @@ def draw_creditos():
         col_widths.append(max_w)
     total_w = sum(col_widths) + spacing_x * (num_cols - 1)
     start_x = WIDTH // 2 - total_w // 2
-    start_y = sfx_rect.bottom + 80  
+    start_y = sfx_rect.bottom + 80
 
     # Centraliza cada coluna
     for col in range(num_cols):
