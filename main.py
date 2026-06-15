@@ -45,10 +45,9 @@ arena_aleatoria_idx = None
 INDICE_DA_ARENA_ALEATORIA = 5
 
 # INICIALIZAÇÃO DO PYGAME
+# WIDTH/HEIGHT vem do config (fonte unica de verdade), importados acima.
 
 pygame.init()
-info = pygame.display.Info()
-WIDTH, HEIGHT = info.current_w, info.current_h
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption("Ping Pong")
 clock = pygame.time.Clock()

@@ -8,7 +8,14 @@ from game.systems.arenas import (
 )
 import math
 from game.systems.f_fruta_equipada import draw_power_frame
-from config import FONT_PATH
+from config import (
+    # Geometria e tela vem do config (fonte unica de verdade), em vez de
+    # recalcular aqui.
+    FONT_PATH, WIDTH, HEIGHT,
+    ARENA_W, ARENA_H, ARENA_X, ARENA_Y,
+    ARENA_LEFT, ARENA_TOP, ARENA_BOTTOM,
+    ARENA_CENTER_X,
+)
 from game.systems.determinacao import arcoiris_color
 
 
@@ -25,26 +32,15 @@ paddle_shake_time_right = 0 # O momento em que a raquete direita se moveu
 fade_borda_fogo = 0.0 # Controla o "fade in/out" da borda de fogo
 fade_borda_azul = 0.0 # Controla o "fade in/out" da borda azul/gelo
 
-# Inicializa o Pygame
+# Inicializa o Pygame e cria a janela em tela cheia (WIDTH/HEIGHT e a geometria
+# da arena vem do config). 'screen' e a superficie de desenho usada por todo o
+# modulo.
 pygame.init()
-info = pygame.display.Info()
-WIDTH, HEIGHT = info.current_w, info.current_h # Obtém a largura e altura da tela do usuário para tela cheia
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN) # Cria a janela do jogo em tela cheia
 pygame.display.set_caption("Ping Pong Neon") # Define o título da janela
 clock = pygame.time.Clock() # Cria um objeto para controlar o FPS (Frames por segundo)
 
 mapa_escolhido = 0 # Índice do mapa atual, 0 é o padrão (Alpha)
-
-# Define as dimensões e a posição da arena de jogo
-ARENA_W, ARENA_H = 700, 500
-ARENA_X = (WIDTH - ARENA_W) // 2
-ARENA_Y = (HEIGHT - ARENA_H) // 2
-ARENA_LEFT = ARENA_X
-ARENA_RIGHT = ARENA_X + ARENA_W
-ARENA_TOP = ARENA_Y
-ARENA_BOTTOM = ARENA_Y + ARENA_H
-ARENA_CENTER_X = ARENA_X + ARENA_W // 2
-ARENA_CENTER_Y = ARENA_Y + ARENA_H // 2
 
 # Cache de imagens de frutas para evitar recarregar a cada frame
 FRUIT_IMAGES = {}

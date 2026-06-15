@@ -1,9 +1,15 @@
 import pygame
 import os
 
-#ARMAZENA ALGUMAS VARIAVEIS QUE SÃO UTILIZADAS NO CÓDIGO TODO
+# FONTE UNICA DE VERDADE para as constantes globais do jogo (geometria da arena,
+# fonte e definicoes de poderes/frutas). Outros modulos (main.py, visual.py)
+# importam estes valores em vez de recalcula-los.
+#
+# ATENCAO: ler a resolucao da tela exige pygame inicializado, entao este modulo
+# tem efeito colateral de import: chama pygame.init() e consulta o display. Em
+# ambiente headless, defina SDL_VIDEODRIVER=dummy antes de importar (ver
+# tests/conftest.py).
 
-# Inicialização do pygame
 pygame.init()
 info = pygame.display.Info()
 WIDTH = info.current_w
@@ -49,22 +55,6 @@ POWER_TEXTS = {
     "blueberry": "BOLAS FALSAS",
     "determinacao": "DETERMINAÇÃO"
 }
-
-# Imagens das frutas
-def carregar_fruta_images():
-    import pygame
-    import os
-    imagens = {}
-    for tipo in POWER_TOTAL_TIMER.keys():
-        path = os.path.join("assets", "images", f"{tipo}.png")
-        if os.path.exists(path):
-            img = pygame.image.load(path).convert_alpha()
-            imagens[tipo] = pygame.transform.smoothscale(img, (32, 32))
-        else:
-            imagens[tipo] = None
-    return imagens
-
-WIDTH, HEIGHT = info.current_w, info.current_h
 
 def carregar_map_images():
     nomes = ["alpha", "beta", "gamma", "delta", "epsilon", "alpha"]
