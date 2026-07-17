@@ -14,7 +14,7 @@ class ObstaculoCruz:
         self.size = size
         self.angle = 0  # Angulo de rotação em graus
         self.rotation_speed = 1  # Velocidade de rotação em graus por frame
-        self.color = (200, 200, 200)  # Cor do obstáculo
+        self.color = (255, 200, 90)  # Cor do obstáculo (dourado neon)
         self.segments = []  # Segmentos que formam a cruz
         self.create_segments()
 
@@ -34,10 +34,15 @@ class ObstaculoCruz:
             self.angle -= 360
 
     def draw(self, screen):
-        """Desenha o obstáculo na tela com a rotação aplicada"""
+        """Desenha o obstáculo na tela com a rotação aplicada e brilho neon"""
+        from game.ui.neon import blit_glow
+        blit_glow(screen, (int(self.x), int(self.y)), int(self.size * 0.85),
+                  self.color, 55)
         for segment in self.segments:
             temp_surface = pygame.Surface(segment.size, pygame.SRCALPHA)
-            pygame.draw.rect(temp_surface, self.color, (0, 0, segment.width, segment.height))
+            rect = pygame.Rect(0, 0, segment.width, segment.height)
+            pygame.draw.rect(temp_surface, self.color, rect, border_radius=6)
+            pygame.draw.rect(temp_surface, (255, 240, 200), rect, width=3, border_radius=6)
             temp_surface = pygame.transform.rotate(temp_surface, self.angle)
             rotated_rect = temp_surface.get_rect(center=segment.center)
             screen.blit(temp_surface, rotated_rect.topleft)
